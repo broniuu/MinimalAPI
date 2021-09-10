@@ -2,10 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using MinimalAPI;
 
-using (var db = new DishContext())
-{
 
-}
 
 var builder = WebApplication.CreateBuilder();
 

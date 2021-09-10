@@ -1,11 +1,19 @@
 ﻿
+using Microsoft.EntityFrameworkCore;
+
 namespace MinimalAPI;
 public class DishesProvider
 {
     public IEnumerable<Dish> GetDishes()
     {
-        yield return new Dish { Name = "Dish1", Price = 12 };
+        using (var db = new DishContext())
+        {
+            foreach (var dish in db.DishDatas)
+            {
+                yield return new Dish { Name = dish.Name, Price = dish.Price, Availability = dish.Availability };
+            }
 
-        yield return new Dish { Name = "Dish2", Price = 14.12M };
+        }
+        
     }
 }

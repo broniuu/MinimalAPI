@@ -1,6 +1,6 @@
 ﻿namespace MinimalAPI
 {
-    class Dish
+    public class Dish
     {
         public string Name { get; set; }
         public decimal Price { get; set; }
