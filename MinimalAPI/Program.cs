@@ -8,6 +8,8 @@ var builder = WebApplication.CreateBuilder();
 
 var app = builder.Build();
 
-app.MapGet("/getDishes", () => new DishesProvider().GetDishes());
+app.MapGet("/getRestaurant", () => new RestaurantProvider().GetRestaurant());
+
+app.MapGet("/getDishes", () => new DishService().GetDishes());
 
 app.Run();

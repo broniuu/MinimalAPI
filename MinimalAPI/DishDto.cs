@@ -1,9 +1,10 @@
 ﻿namespace MinimalAPI
 {
-    public class Dish
+    public class DishDto
     {
         public string Name { get; set; }
         public decimal Price { get; set; }
         public Status Availability { get; set; }
+        public RestaurantDto Restaurant { get; set; }
     }
 }
