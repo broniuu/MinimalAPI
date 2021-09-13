@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 
 namespace MinimalAPI;
-public class RestaurantProvider
+public class RestaurantService
 {
     public async Task<IEnumerable<RestaurantDto>> GetRestaurant()
     {

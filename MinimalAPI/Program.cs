@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder();
 
 var app = builder.Build();
 
-app.MapGet("/getRestaurant", () => new RestaurantProvider().GetRestaurant());
+app.MapGet("/getRestaurant", () => new RestaurantService().GetRestaurant());
 
 app.MapGet("/getDishes", () => new DishService().GetDishes());
 

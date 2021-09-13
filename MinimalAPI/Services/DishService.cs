@@ -12,7 +12,7 @@ public class DishService
         }
         
     }
-    private DishDto Convert(DishData dish)
+    private DishDto Convert(Dish dish)
     {
         return new DishDto
         {
