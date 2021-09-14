@@ -7,20 +7,21 @@ public class DishService
     public async Task<IEnumerable<DishDto>> GetDishes()
     {
         using (var db = new DishContext())
-        { 
-            return (await db.DishDatas.ToListAsync()).Select(Convert);
+        {
+            return (await db.Dishes.Include(d => d.Restaurant).ToListAsync()).Select(Convert);
+
         }
         
     }
     private DishDto Convert(Dish dish)
     {
+        var name = dish.Restaurant;
         return new DishDto
         {
             Name = dish.Name,
             Price = dish.Price,
             Availability = dish.Availability,
-            Restaurant = new RestaurantDto
-            {
+            Restaurant = new RestaurantForDishDto {
                 Name = dish.Restaurant.Name
             }
         };

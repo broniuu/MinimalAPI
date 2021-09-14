@@ -5,6 +5,6 @@
         public string Name { get; set; }
         public decimal Price { get; set; }
         public Status Availability { get; set; }
-        public RestaurantDto Restaurant { get; set; }
+        public RestaurantForDishDto Restaurant { get; set; }
     }
 }

@@ -8,14 +8,25 @@ public class RestaurantService
     {
         using (var db = new DishContext())
         {
-            return (await db.Restaurants.ToListAsync()).Select(Convert);    
+
+            var enumerable = (await db.Restaurants.Include(r => r.Dishes)
+                .ToListAsync()).Select(Convert);
+            return enumerable;
         }
     }
     private RestaurantDto Convert(Restaurant restaurant)
     {
-        return new RestaurantDto
+        var restaurantDto = new RestaurantDto
         {
-            Name = restaurant.Name
+            Name = restaurant.Name,
+            Dishes = restaurant.Dishes.Select(ConvertDish)
         };
+
+        return restaurantDto;
+    }
+
+    private DishForRestaurantDto ConvertDish(Dish dish)
+    {
+        return new DishForRestaurantDto { Name = dish.Name} ;
     }
 }

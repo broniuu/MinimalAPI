@@ -4,9 +4,11 @@ using MinimalAPI;
 
 
 
-var builder = WebApplication.CreateBuilder();
+var builder = WebApplication.CreateBuilder(args);
 
-var app = builder.Build();
+await using var app = builder.Build();
+
+
 
 app.MapGet("/getRestaurant", () => new RestaurantService().GetRestaurant());
 
