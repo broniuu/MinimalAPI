@@ -31,7 +31,7 @@ if (app.Environment.IsDevelopment())
 
 app.MapGet("/", (Func<string>)(() => "This a demo for JWT Authentication using Minimalist Web API"));
 
-app.MapGet("/login", [AllowAnonymous] async (HttpContext http, ITokenService tokenService, IUserRepositoryService userRepositoryService) => {
+app.MapPost("/login", [AllowAnonymous] async (HttpContext http, ITokenService tokenService, IUserRepositoryService userRepositoryService) => {
     var userModel = await http.Request.ReadFromJsonAsync<UserModel>();
     var userDto = userRepositoryService.GetUser(userModel);
     if (userDto == null)

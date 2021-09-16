@@ -6,6 +6,7 @@
         new("Jia Anu", "jia"),
         new("Naina Anu", "naina"),
         new("Sreena Anu", "sreena"),
+        new("Filip", "1234"),
     };
     public UserDto GetUser(UserModel userModel)
     {
