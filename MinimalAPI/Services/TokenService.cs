@@ -16,4 +16,11 @@
             expires: DateTime.Now.Add(ExpiryDuration), signingCredentials: credentials);
         return new JwtSecurityTokenHandler().WriteToken(tokenDescriptor);
     }
+    public string FindRole(string stream, string roleName)
+    {
+        var handler = new JwtSecurityTokenHandler();
+        var token = handler.ReadToken(stream) as JwtSecurityToken;
+        var role = token.Claims.First(c => c.Type == roleName).Value;
+        return role;
+    }
 }
