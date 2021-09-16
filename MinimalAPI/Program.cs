@@ -1,17 +1,50 @@
-﻿using System;
-using Microsoft.AspNetCore.Builder;
-using MinimalAPI;
-
-
+﻿using MinimalAPI;
 
 var builder = WebApplication.CreateBuilder(args);
+//app.MapGet("/getRestaurant", () => new RestaurantService().GetRestaurant());
+//app.MapGet("/getDishes", () => new DishService().GetDishes());
+builder.Services.AddSingleton<ITokenService>(new TokenService());
+builder.Services.AddSingleton<IUserRepositoryService>(new UserRepositoryService());
+builder.Services.AddAuthorization();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(opt =>
+{
+    opt.TokenValidationParameters = new()
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Issuer"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+    };
+});
 
 await using var app = builder.Build();
+app.UseAuthentication();
+app.UseAuthorization();
 
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+}
 
+app.MapGet("/", (Func<string>)(() => "This a demo for JWT Authentication using Minimalist Web API"));
 
-app.MapGet("/getRestaurant", () => new RestaurantService().GetRestaurant());
+app.MapGet("/login", [AllowAnonymous] async (HttpContext http, ITokenService tokenService, IUserRepositoryService userRepositoryService) => {
+    var userModel = await http.Request.ReadFromJsonAsync<UserModel>();
+    var userDto = userRepositoryService.GetUser(userModel);
+    if (userDto == null)
+    {
+        http.Response.StatusCode = 401;
+        return;
+    }
 
-app.MapGet("/getDishes", () => new DishService().GetDishes());
+    var token = tokenService.BuildToken(builder.Configuration["Jwt:Key"], builder.Configuration["Jwt:Issuer"], userDto);
+    await http.Response.WriteAsJsonAsync(new { token = token });
+    return;
+});
 
-app.Run();
+app.MapGet("/doaction", (Func<string>)([Authorize]() => "Action Succeeded"));
+
+await app.RunAsync();
