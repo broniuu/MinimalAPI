@@ -1,22 +1,9 @@
-﻿using MinimalAPI;
-
-public class UserRepositoryService : IUserRepositoryService
+﻿
+namespace MinimalAPI;
+public class UserUpserter
 {
-    private List<UserDto> _users => new()
+    public Task UpsertUsers(IEnumerable<UserDto> userDtos)
     {
-        new("Anu Viswan", "anu"),
-        new("Jia Anu", "jia"),
-        new("Naina Anu", "naina"),
-        new("Sreena Anu", "sreena"),
-        new("Filip", "1234"),
-    };
-    public UserDto GetUser(UserModel userModel)
-    {
-        return _users.FirstOrDefault(x => string.Equals(x.UserName, userModel.UserName) && string.Equals(x.Password, userModel.Password));
-    }
-    public Task UpsertUsers()
-    {
-        var userDtos = _users; 
         using (var db = new DishContext())
         {
             foreach (var userDto in userDtos)
