@@ -42,11 +42,13 @@ app.MapPost("/login", [AllowAnonymous] async (HttpContext http, ITokenService to
 
     var token = tokenService.BuildToken(builder.Configuration["Jwt:Key"], builder.Configuration["Jwt:Issuer"], userDto);
     await http.Response.WriteAsJsonAsync(new { token = token });
-    var userName = tokenService.FindRole(token, "UserName");
+    //var userName = tokenService.FindRole(token, "UserName");
     return;
 });
 
-app.MapGet("/doaction", (Func<string>)([Authorize]() => "Action Succeeded"));
+app.MapPost("/orderdish", ([Authorize](HttpContext http) => {
+    var userName = http.User.Identity.Name;
+}));
 
 
 await app.RunAsync();
