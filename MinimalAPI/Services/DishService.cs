@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 
 namespace MinimalAPI;
-public class DishService
+public class DishService : IDishService
 {
     public async Task<IEnumerable<DishDto>> GetDishes()
     {
@@ -25,5 +25,10 @@ public class DishService
                 Name = dish.Restaurant.Name
             }
         };
+    }
+
+    public DishDto GetDish(DishModel dishModel, IEnumerable<DishDto> dishDtos)
+    {
+        return dishDtos.FirstOrDefault(d => Equals(d.DishID, dishModel.DishId));
     }
 }

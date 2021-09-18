@@ -1,8 +1,6 @@
 ﻿using MinimalAPI;
 
-
-
-    var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton<ITokenService>(new TokenService());
 builder.Services.AddSingleton<IUserRepositoryService>(new UserRepositoryService());
 builder.Services.AddAuthorization();
@@ -46,11 +44,17 @@ app.MapPost("/login", [AllowAnonymous] async (HttpContext http, ITokenService to
     return;
 });
 
-app.MapPost("/orderdish", ([Authorize](HttpContext http) => {
+app.MapPost("/orderdish", ([Authorize]async (HttpContext http) => {
     var userName = http.User.Identity.Name;
-    new UserUpserter().UpsertUsers(UserUpserter);
+    
+    //upserting users to data base
+    new UserRepositoryService().UpsertUsers();
+    
     var restaurantsDto = new RestaurantService().GetRestaurant();
     var dishesDto = new DishService().GetDishes();
+
+    var dishModel = await http.Request.ReadFromJsonAsync<DishModel>();
+    var dishDto =
 
 }));
 
