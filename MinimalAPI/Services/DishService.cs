@@ -27,8 +27,8 @@ public class DishService : IDishService
         };
     }
 
-    public DishDto GetDish(DishModel dishModel, IEnumerable<DishDto> dishDtos)
+    public DishDto GetDish(DishModel dishModel, Task<IEnumerable<DishDto>> dishDtos)
     {
-        return dishDtos.FirstOrDefault(d => Equals(d.DishID, dishModel.DishId));
+        return dishDtos.Result.ToList().FirstOrDefault(d => Equals(d.DishID, dishModel.DishId));
     }
 }

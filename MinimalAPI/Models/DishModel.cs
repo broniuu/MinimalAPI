@@ -1,5 +1,4 @@
 ﻿
-namespace MinimalAPI;
 public record DishModel
 {
     [Required]
