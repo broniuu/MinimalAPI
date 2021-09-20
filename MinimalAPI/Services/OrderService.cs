@@ -1,10 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MinimalAPI;
+using System.Globalization;
 
 public class OrderService : IOrderService
 {
     public Task InsertOrder(DishDto dishDto, string userName, OrderDto orderDto)
-    {
+    {   
         using (var db = new DishContext())
         {
             var user = db.Users.FirstOrDefault(u => u.Name == userName);
@@ -13,11 +14,11 @@ public class OrderService : IOrderService
                 UserId = user.UserId,
                 DishId = dishDto.DishID,
                 amount = orderDto.Amount,
+                date = DateTime.Now
             }
                 ).Entity;
             db.SaveChanges();
         }
-
         return Task.CompletedTask;
     }
 }
