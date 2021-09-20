@@ -30,6 +30,6 @@ public class DishService : IDishService
 
     public DishDto GetDish(OrderDto orderDto, Task<IEnumerable<DishDto>> dishDtos)
     {
-        return dishDtos.Result.ToList().FirstOrDefault(d => Equals(d.DishID, dishModel.DishId));
+        return dishDtos.Result.ToList().FirstOrDefault(d => Equals(d.DishID, orderDto.DishId));
     }
 }
