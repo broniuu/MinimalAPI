@@ -3,6 +3,8 @@
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton<ITokenService>(new TokenService());
 builder.Services.AddSingleton<IUserRepositoryService>(new UserRepositoryService());
+builder.Services.AddSingleton<IRestaurantService>(new RestaurantService());
+builder.Services.AddSingleton<IDishService>(new DishService());
 builder.Services.AddAuthorization();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(opt =>
 {
