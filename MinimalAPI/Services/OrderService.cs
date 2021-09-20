@@ -13,8 +13,8 @@ public class OrderService : IOrderService
             {
                 UserId = user.UserId,
                 DishId = dishDto.DishID,
-                amount = orderDto.Amount,
-                date = DateTime.Now
+                Amount = orderDto.Amount,
+                Date = DateTime.Now
             }
                 ).Entity;
             db.SaveChanges();
