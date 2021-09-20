@@ -21,6 +21,7 @@ public class DishService : IDishService
             Name = dish.Name,
             Price = dish.Price,
             Availability = dish.Availability,
+            DishID = dish.DishId,
             Restaurant = new RestaurantForDishDto {
                 Name = dish.Restaurant.Name
             }

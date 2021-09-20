@@ -46,7 +46,7 @@ app.MapPost("/login", [AllowAnonymous] async (HttpContext http, ITokenService to
     return;
 });
 
-app.MapPost("/orderdish", ([Authorize] async 
+app.MapPost("/orderdish", [Authorize] async 
     (HttpContext http, 
     IDishService dishService, 
     IRestaurantService restaurantService, 
@@ -60,15 +60,17 @@ app.MapPost("/orderdish", ([Authorize] async
         var restaurantsDto = restaurantService.GetRestaurant();
         var dishesDto = dishService.GetDishes();
 
-        var dishModel = await http.Request.ReadFromJsonAsync<DishModel>();
+        var dishModel = new DishModel();
+        dishModel.DishId = 3;
         var dishDto = dishService.GetDish(dishModel, dishesDto);
         if (dishDto == null)
         {
             http.Response.StatusCode = 401;
             return;
         }
+        http.Response.WriteAsJsonAsync(dishDto);
         return;
-    }));
+    });
 
 
 await app.RunAsync();
