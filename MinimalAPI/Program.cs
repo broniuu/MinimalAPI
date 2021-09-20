@@ -46,7 +46,8 @@ app.MapPost("/login", [AllowAnonymous] async (HttpContext http, ITokenService to
     return;
 });
 
-// app.MapGet("/getdishes", () => new DishService().GetDishes());
+app.MapGet("/getdishes", () => new DishService().GetDishes());
+app.MapGet("/getrestaurants", () => new RestaurantService().GetRestaurants());
 
 app.MapPost("/orderdish", [Authorize] async 
     (HttpContext http, 
