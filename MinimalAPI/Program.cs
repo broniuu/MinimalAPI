@@ -5,6 +5,7 @@ builder.Services.AddSingleton<ITokenService>(new TokenService());
 builder.Services.AddSingleton<IUserRepositoryService>(new UserRepositoryService());
 builder.Services.AddSingleton<IRestaurantService>(new RestaurantService());
 builder.Services.AddSingleton<IDishService>(new DishService());
+builder.Services.AddSingleton<IOrderService>(new OrderService());
 builder.Services.AddAuthorization();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(opt =>
 {
@@ -53,7 +54,8 @@ app.MapPost("/orderdish", [Authorize] async
     (HttpContext http, 
     IDishService dishService, 
     IRestaurantService restaurantService, 
-    IUserRepositoryService userRepositoryService  ) => {
+    IUserRepositoryService userRepositoryService,
+    IOrderService orderService) => {
     
         var userName = http.User.Identity.Name;
 
@@ -69,7 +71,8 @@ app.MapPost("/orderdish", [Authorize] async
             http.Response.StatusCode = 403;
             return;
         }
-        http.Response.WriteAsJsonAsync(dishDto);
+        await orderService.InsertOrder(dishDto, userName, orderDto);
+        await http.Response.WriteAsJsonAsync(dishDto);
         return;
     });
 
