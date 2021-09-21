@@ -67,7 +67,12 @@ app.MapGet("/getdishes", async
     await http.Response.WriteAsJsonAsync(localDishes);
 });
 
-app.MapGet("/getrestaurants", () => new RestaurantService().GetRestaurants());
+app.MapGet("/getrestaurants", async
+    (HttpContext http,
+    IDishService dishService) =>
+{
+
+});
 
 app.MapPost("/orderdish", [Authorize] async 
     (HttpContext http, 

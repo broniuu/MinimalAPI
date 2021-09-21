@@ -1,6 +1,6 @@
 ﻿using MinimalAPI;
 public interface IRestaurantService
 {
-    Task<IEnumerable<RestaurantDto>> GetRestaurants();
+    Task<IEnumerable<RestaurantDto>> GetRestaurants(PageParameters pageParameters);
 
 }
