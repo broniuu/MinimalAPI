@@ -22,14 +22,16 @@ public class OrderService : IOrderService
         return Task.CompletedTask;
     }
 
-    public IEnumerable<OrderInformation> GiveOrderInformations()
+    public IEnumerable<OrderInformation> GetOrderInformations(PageParameters pageParameters)
     {
         var orderInformations = new List<OrderInformation>();
         using (var db = new DishContext())
         { 
             var orders = db.Orders.Where(o => o.Date.Day.Equals(DateTime.Today.Day) 
             && o.Date.Month.Equals(DateTime.Today.Month)
-            && o.Date.Year.Equals(DateTime.Today.Year));
+            && o.Date.Year.Equals(DateTime.Today.Year))
+            .Skip((pageParameters.PageNumber - 1) * pageParameters.PageSize)
+            .Take(pageParameters.PageSize); ;
             foreach(var order in orders)
             {
                 var userId = order.UserId;
@@ -57,5 +59,6 @@ public class OrderService : IOrderService
 
         }
         return orderInformations;
+
     }
 }

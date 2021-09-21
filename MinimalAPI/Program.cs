@@ -99,20 +99,20 @@ app.MapGet("/returnorders", [Authorize] async
     (HttpContext http,
     IOrderService orderService) =>
 {
-    var pageSize = http.Request.Query["pagesize"].ToString();
-    var pageNumber = http.Request.Query["pagenumber"].ToString();
+    var pageSize = Int32.Parse(http.Request.Query["pagesize"].ToString());
+    var pageNumber = Int32.Parse(http.Request.Query["pagenumber"].ToString());
 
     var pageParameters = new PageParameters();
-    if (pageSize != null)
+    if (pageSize != 0)
     {
-        pageParameters.PageSize = Int32.Parse(pageSize);
+        pageParameters.PageSize = pageSize;
     }
-    if (pageSize != null)
+    if (pageSize != 0)
     {
-        pageParameters.PageNumber = Int32.Parse(pageNumber);
+        pageParameters.PageNumber = pageNumber;
     }
 
-    var localOrders = orderService.GiveOrderInformations();
+    var localOrders = orderService.GetOrderInformations(pageParameters);
     await http.Response.WriteAsJsonAsync(localOrders);
 });
 
