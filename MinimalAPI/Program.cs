@@ -6,6 +6,7 @@ builder.Services.AddSingleton<IUserRepositoryService>(new UserRepositoryService(
 builder.Services.AddSingleton<IRestaurantService>(new RestaurantService());
 builder.Services.AddSingleton<IDishService>(new DishService());
 builder.Services.AddSingleton<IOrderService>(new OrderService());
+builder.Services.AddSingleton<IPageService>(new PageService());
 builder.Services.AddAuthorization();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(opt =>
 {
@@ -49,29 +50,22 @@ app.MapPost("/login", [AllowAnonymous] async (HttpContext http, ITokenService to
 
 app.MapGet("/getdishes", async
     (HttpContext http,
-    IDishService dishService) =>
+    IDishService dishService,
+    IPageService pageService) =>
 {
-    var pageSize = Int32.Parse(http.Request.Query["pagesize"].ToString());
-    var pageNumber = Int32.Parse(http.Request.Query["pagenumber"].ToString());
-
-    var pageParameters = new PageParameters();
-    if (pageSize != 0)
-    {
-        pageParameters.PageSize = pageSize;
-    }
-    if (pageSize != 0)
-    {
-        pageParameters.PageNumber = pageNumber;
-    }
+    var pageParameters = pageService.SetPageParameters("pagesize", "pagenumber", http);
     var localDishes = dishService.GetDishes(pageParameters);
     await http.Response.WriteAsJsonAsync(localDishes);
 });
 
 app.MapGet("/getrestaurants", async
     (HttpContext http,
-    IDishService dishService) =>
+    IRestaurantService restauraService,
+    IPageService pageService) =>
 {
-
+    var pageParameters = pageService.SetPageParameters("pagesize", "pagenumber", http);
+    var localRestaurants = restauraService.GetRestaurants(pageParameters);
+    await http.Response.WriteAsJsonAsync(localRestaurants);
 });
 
 app.MapPost("/orderdish", [Authorize] async 
@@ -102,21 +96,10 @@ app.MapPost("/orderdish", [Authorize] async
 
 app.MapGet("/returnorders", [Authorize] async
     (HttpContext http,
-    IOrderService orderService) =>
+    IOrderService orderService,
+    IPageService pageService) =>
 {
-    var pageSize = Int32.Parse(http.Request.Query["pagesize"].ToString());
-    var pageNumber = Int32.Parse(http.Request.Query["pagenumber"].ToString());
-
-    var pageParameters = new PageParameters();
-    if (pageSize != 0)
-    {
-        pageParameters.PageSize = pageSize;
-    }
-    if (pageSize != 0)
-    {
-        pageParameters.PageNumber = pageNumber;
-    }
-
+    var pageParameters = pageService.SetPageParameters("pagesize", "pagenumber", http);
     var localOrders = orderService.GetOrderInformations(pageParameters);
     await http.Response.WriteAsJsonAsync(localOrders);
 });
