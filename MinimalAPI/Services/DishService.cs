@@ -4,14 +4,27 @@ using Microsoft.EntityFrameworkCore;
 namespace MinimalAPI;
 public class DishService : IDishService
 {
-    public async Task<IEnumerable<DishDto>> GetDishes()
+    public async Task<IEnumerable<DishDto>> GetDishes(PageParameters pageParameters)
     {
         using (var db = new DishContext())
         {
-            return (await db.Dishes.Include(d => d.Restaurant).ToListAsync()).Select(Convert);
+            return (await db.Dishes.Include(d => d.Restaurant)
+                .Skip((pageParameters.PageNumber - 1) * pageParameters.PageSize)
+                .Take(pageParameters.PageSize)
+                .ToListAsync()).Select(Convert)
+                .ToList();
 
         }
         
+    }
+    public async Task<IEnumerable<DishDto>> GetAllDishes()
+    {
+        using (var db = new DishContext())
+        {
+            return (await db.Dishes.Include(d => d.Restaurant)
+                .ToListAsync()).Select(Convert);
+        }
+
     }
     private DishDto Convert(Dish dish)
     {

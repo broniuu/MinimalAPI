@@ -47,7 +47,26 @@ app.MapPost("/login", [AllowAnonymous] async (HttpContext http, ITokenService to
     return;
 });
 
-app.MapGet("/getdishes", () => new DishService().GetDishes());
+app.MapGet("/getdishes", async
+    (HttpContext http,
+    IDishService dishService) =>
+{
+    var pageSize = Int32.Parse(http.Request.Query["pagesize"].ToString());
+    var pageNumber = Int32.Parse(http.Request.Query["pagenumber"].ToString());
+
+    var pageParameters = new PageParameters();
+    if (pageSize != 0)
+    {
+        pageParameters.PageSize = pageSize;
+    }
+    if (pageSize != 0)
+    {
+        pageParameters.PageNumber = pageNumber;
+    }
+    var localDishes = dishService.GetDishes(pageParameters);
+    await http.Response.WriteAsJsonAsync(localDishes);
+});
+
 app.MapGet("/getrestaurants", () => new RestaurantService().GetRestaurants());
 
 app.MapPost("/orderdish", [Authorize] async 
@@ -62,7 +81,7 @@ app.MapPost("/orderdish", [Authorize] async
     //upserting users to data base
     await userRepositoryService.UpsertUsers();
 
-    var dishes = dishService.GetDishes();
+    var dishes = dishService.GetAllDishes();
 
     var orderDto = await http.Request.ReadFromJsonAsync<OrderDto>();
     var dishDto = dishService.GetDish(orderDto, dishes);
@@ -76,12 +95,25 @@ app.MapPost("/orderdish", [Authorize] async
     return;
 });
 
-app.MapPost("/returnorder", [Authorize] async
+app.MapGet("/returnorders", [Authorize] async
     (HttpContext http,
     IOrderService orderService) =>
 {
-    var orders = orderService.GiveOrderInformations();
-    await http.Response.WriteAsJsonAsync(orders);
+    var pageSize = http.Request.Query["pagesize"].ToString();
+    var pageNumber = http.Request.Query["pagenumber"].ToString();
+
+    var pageParameters = new PageParameters();
+    if (pageSize != null)
+    {
+        pageParameters.PageSize = Int32.Parse(pageSize);
+    }
+    if (pageSize != null)
+    {
+        pageParameters.PageNumber = Int32.Parse(pageNumber);
+    }
+
+    var localOrders = orderService.GiveOrderInformations();
+    await http.Response.WriteAsJsonAsync(localOrders);
 });
 
     await app.RunAsync();
