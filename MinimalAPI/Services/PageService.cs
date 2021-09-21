@@ -6,6 +6,24 @@ public class PageService : IPageService
     {       
         var pageSize = SetPageSize(patternOfpageSize, http);
         var pageNumber = SetPageNumber(patternOfpageNumber, http);
+        if (pageSize == 0 && pageNumber == 0)
+        {
+            return new PageParameters();
+        }
+        else if (pageNumber == 0)
+        {
+            return new PageParameters()
+            {
+                PageSize = pageSize
+            };
+        }
+        else if (pageSize == 0)
+        {
+            return new PageParameters()
+            {
+                PageNumber = pageNumber
+            };
+        }
         return new PageParameters()
         {
             PageNumber = pageNumber,
