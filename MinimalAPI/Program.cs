@@ -55,28 +55,35 @@ app.MapPost("/orderdish", [Authorize] async
     IDishService dishService, 
     IRestaurantService restaurantService, 
     IUserRepositoryService userRepositoryService,
-    IOrderService orderService) => {
-    
-        var userName = http.User.Identity.Name;
+    IOrderService orderService) => 
+{
+    var userName = http.User.Identity.Name;
 
-        //upserting users to data base
-        await userRepositoryService.UpsertUsers();
+    //upserting users to data base
+    await userRepositoryService.UpsertUsers();
 
-        var dishes = dishService.GetDishes();
+    var dishes = dishService.GetDishes();
 
-        var orderDto = await http.Request.ReadFromJsonAsync<OrderDto>();
-        var dishDto = dishService.GetDish(orderDto, dishes);
-        if (dishDto == null)
-        {
-            http.Response.StatusCode = 403;
-            return;
-        }
-        await orderService.InsertOrder(dishDto, userName, orderDto);
-        await http.Response.WriteAsJsonAsync(dishDto);
+    var orderDto = await http.Request.ReadFromJsonAsync<OrderDto>();
+    var dishDto = dishService.GetDish(orderDto, dishes);
+    if (dishDto == null)
+    {
+        http.Response.StatusCode = 403;
         return;
-    });
+    }
+    await orderService.InsertOrder(dishDto, userName, orderDto);
+    await http.Response.WriteAsJsonAsync(dishDto);
+    return;
+});
 
+app.MapPost("/returnorder", [Authorize] async
+    (HttpContext http,
+    IOrderService orderService) =>
+{
+    var orders = orderService.GiveOrderInformations();
+    await http.Response.WriteAsJsonAsync(orders);
+});
 
-await app.RunAsync();
+    await app.RunAsync();
 
 
