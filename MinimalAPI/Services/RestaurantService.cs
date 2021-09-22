@@ -9,13 +9,13 @@ public class RestaurantService : IRestaurantService
         using (var db = new DishContext())
         {
 
-            var enumerable = (await db.Restaurants
+            var restaurantDtos = (await db.Restaurants
                 .Skip((pageParameters.PageNumber - 1) * pageParameters.PageSize)
                 .Take(pageParameters.PageSize)
                 .Include(r => r.Dishes)
                 .ToListAsync())
                 .Select(Convert);
-            return enumerable;
+            return restaurantDtos;
         }
     }
     private RestaurantDto Convert(Restaurant restaurant)
@@ -32,5 +32,12 @@ public class RestaurantService : IRestaurantService
     private DishForRestaurantDto ConvertDish(Dish dish)
     {
         return new DishForRestaurantDto { Name = dish.Name} ;
+    }
+
+    public async Task<IEnumerable<RestaurantDto>> SearchForRestaurants(
+        Task<IEnumerable<RestaurantDto>> restaurantDtos,
+        string searchRestaurant)
+    {
+        return restaurantDtos;
     }
 }

@@ -45,4 +45,28 @@ public class DishService : IDishService
     {
         return dishDtos.Result.ToList().FirstOrDefault(d => Equals(d.DishID, orderDto.DishId));
     }
+    public async Task<IEnumerable<DishDto>> FilterDishes(
+        Task<IEnumerable<DishDto>> dishDtos,
+        string dishNameReading,
+        string dsihIdReading,
+        string maxPriceReading,
+        string minPriceReading,
+        string restaurantNameReading,
+        string restaurantIdReading,
+        string availabilityReading)
+    {
+        var filterDishes = dishDtos.Result.ToList().AsEnumerable();
+        if (!String.IsNullOrEmpty(dishNameReading))
+        {
+            filterDishes = filterDishes.Where(fd => fd.Name.Contains(dishNameReading));
+        }
+    }
+    private IEnumerable<DishDto> UseSingielFilter(IEnumerable<DishDto> dishes, string namedishAtribute, string reading)
+    {
+        if (!String.IsNullOrEmpty(reading))
+        {
+            return dishes.Where(dishAtribute.Contains(reading));
+        }
+        return dishes;
+    }
 }
