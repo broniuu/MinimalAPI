@@ -1,11 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
-using MinimalAPI;
-using System.Globalization;
+﻿using MinimalAPI;
 
 public class OrderService : IOrderService
 {
     public Task InsertOrder(DishDto dishDto, string userName, OrderDto orderDto)
-    {   
+    {
         using (var db = new DishContext())
         {
             var user = db.Users.FirstOrDefault(u => u.Name == userName);
@@ -26,13 +24,13 @@ public class OrderService : IOrderService
     {
         var orderInformations = new List<OrderInformation>();
         using (var db = new DishContext())
-        { 
-            var orders = db.Orders.Where(o => o.Date.Day.Equals(DateTime.Today.Day) 
+        {
+            var orders = db.Orders.Where(o => o.Date.Day.Equals(DateTime.Today.Day)
             && o.Date.Month.Equals(DateTime.Today.Month)
             && o.Date.Year.Equals(DateTime.Today.Year))
             .Skip((pageParameters.PageNumber - 1) * pageParameters.PageSize)
             .Take(pageParameters.PageSize); ;
-            foreach(var order in orders)
+            foreach (var order in orders)
             {
                 var userId = order.UserId;
                 var userName = db.Users.FirstOrDefault(u => userId == u.UserId).Name;
@@ -43,7 +41,7 @@ public class OrderService : IOrderService
                 var restaurantId = currentDish.RestaurantId;
                 var restaurantName = db.Restaurants.FirstOrDefault(r => restaurantId == r.RestaurantId).Name;
 
-                orderInformations.Add( new OrderInformation()
+                orderInformations.Add(new OrderInformation()
                 {
                     UserId = userId,
                     UserName = userName,
@@ -52,13 +50,10 @@ public class OrderService : IOrderService
                     Price = price,
                     RestaurantId = restaurantId,
                     RestaurantName = restaurantName,
-
                 }
                     );
             }
-
         }
         return orderInformations;
-
     }
 }

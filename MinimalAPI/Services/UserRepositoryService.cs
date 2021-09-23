@@ -10,13 +10,15 @@ public class UserRepositoryService : IUserRepositoryService
         new("Sreena Anu", "sreena"),
         new("Filip", "1234"),
     };
+
     public UserDto GetUser(UserModel userModel)
     {
         return _users.FirstOrDefault(x => string.Equals(x.UserName, userModel.UserName) && string.Equals(x.Password, userModel.Password));
     }
+
     public Task UpsertUsers()
     {
-        var userDtos = _users; 
+        var userDtos = _users;
         using (var db = new DishContext())
         {
             foreach (var userDto in userDtos)

@@ -1,9 +1,9 @@
-﻿
-namespace MinimalAPI;
+﻿namespace MinimalAPI;
+
 public class PageService : IPageService
 {
     public PageParameters SetPageParameters(string patternOfpageSize, string patternOfpageNumber, HttpContext http)
-    {       
+    {
         var pageSize = SetPageSize(patternOfpageSize, http);
         var pageNumber = SetPageNumber(patternOfpageNumber, http);
         if (pageSize == 0 && pageNumber == 0)

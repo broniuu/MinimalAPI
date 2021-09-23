@@ -1,7 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-
-namespace MinimalAPI
+﻿namespace MinimalAPI
 {
     public class DishContext : DbContext
     {
@@ -15,8 +12,8 @@ namespace MinimalAPI
         {
             DbPath = @"C:\Users\broni\source\repos\Projekt\data.db";
         }
+
         protected override void OnConfiguring(DbContextOptionsBuilder options)
             => options.UseSqlite($"Data Source={DbPath}");
-
     }
 }

@@ -1,6 +1,7 @@
 ﻿public class TokenService : ITokenService
 {
     private TimeSpan ExpiryDuration = new TimeSpan(0, 30, 0);
+
     public string BuildToken(string key, string issuer, UserDto user)
     {
         var claims = new[]
@@ -16,6 +17,7 @@
             expires: DateTime.Now.Add(ExpiryDuration), signingCredentials: credentials);
         return new JwtSecurityTokenHandler().WriteToken(tokenDescriptor);
     }
+
     public string FindRole(string stream, string roleName)
     {
         var handler = new JwtSecurityTokenHandler();

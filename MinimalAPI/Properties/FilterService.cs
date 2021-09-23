@@ -1,5 +1,5 @@
-﻿
-namespace MinimalAPI.Properties;
+﻿namespace MinimalAPI.Properties;
+
 public class FilterService
 {
     public Filter SetFilterParameters(
@@ -11,7 +11,5 @@ public class FilterService
         string restaurantIdReading,
         string availabilityReading)
     {
-        
     }
 }
-

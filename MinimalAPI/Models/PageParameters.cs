@@ -1,10 +1,11 @@
-﻿
-namespace MinimalAPI;
+﻿namespace MinimalAPI;
+
 public class PageParameters
 {
-    const int maxPageSize = 50;
+    private const int maxPageSize = 50;
     public int PageNumber { get; set; } = 1;
     private int _pageSize = 10;
+
     public int PageSize
     {
         get

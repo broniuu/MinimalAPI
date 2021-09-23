@@ -33,7 +33,8 @@ if (app.Environment.IsDevelopment())
 
 app.MapGet("/", (Func<string>)(() => "This a demo for JWT Authentication using Minimalist Web API"));
 
-app.MapPost("/login", [AllowAnonymous] async (HttpContext http, ITokenService tokenService, IUserRepositoryService userRepositoryService) => {
+app.MapPost("/login", [AllowAnonymous] async (HttpContext http, ITokenService tokenService, IUserRepositoryService userRepositoryService) =>
+{
     var userModel = await http.Request.ReadFromJsonAsync<UserModel>();
     var userDto = userRepositoryService.GetUser(userModel);
     if (userDto == null)
@@ -68,12 +69,12 @@ app.MapGet("/getrestaurants", async
     await http.Response.WriteAsJsonAsync(localRestaurants);
 });
 
-app.MapPost("/orderdish", [Authorize] async 
-    (HttpContext http, 
-    IDishService dishService, 
-    IRestaurantService restaurantService, 
+app.MapPost("/orderdish", [Authorize] async
+    (HttpContext http,
+    IDishService dishService,
+    IRestaurantService restaurantService,
     IUserRepositoryService userRepositoryService,
-    IOrderService orderService) => 
+    IOrderService orderService) =>
 {
     var userName = http.User.Identity.Name;
 
@@ -104,6 +105,4 @@ app.MapGet("/returnorders", [Authorize] async
     await http.Response.WriteAsJsonAsync(localOrders);
 });
 
-    await app.RunAsync();
-
-
+await app.RunAsync();

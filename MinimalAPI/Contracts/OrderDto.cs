@@ -1,8 +1,8 @@
 ﻿public record OrderDto
 {
     [Required]
-    public int DishId {  get; set; }
+    public int DishId { get; set; }
 
     [Required]
-    public int Amount {  get; set; }
+    public int Amount { get; set; }
 }

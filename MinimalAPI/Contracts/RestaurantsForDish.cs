@@ -1,6 +1,6 @@
-﻿
-namespace MinimalAPI;
+﻿namespace MinimalAPI;
+
 public class RestaurantForDishDto
 {
-    public string Name {  get; set; }  
+    public string Name { get; set; }
 }
