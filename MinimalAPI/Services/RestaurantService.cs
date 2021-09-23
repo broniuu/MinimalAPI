@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using MinimalAPI;
 public class RestaurantService : IRestaurantService
 {
-    public async Task<IEnumerable<RestaurantDto>> GetRestaurant()
+    public async Task<IEnumerable<RestaurantDto>> GetRestaurants()
     {
         using (var db = new DishContext())
         {

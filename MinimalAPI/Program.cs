@@ -5,6 +5,7 @@ builder.Services.AddSingleton<ITokenService>(new TokenService());
 builder.Services.AddSingleton<IUserRepositoryService>(new UserRepositoryService());
 builder.Services.AddSingleton<IRestaurantService>(new RestaurantService());
 builder.Services.AddSingleton<IDishService>(new DishService());
+builder.Services.AddSingleton<IOrderService>(new OrderService());
 builder.Services.AddAuthorization();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(opt =>
 {
@@ -46,33 +47,43 @@ app.MapPost("/login", [AllowAnonymous] async (HttpContext http, ITokenService to
     return;
 });
 
+app.MapGet("/getdishes", () => new DishService().GetDishes());
+app.MapGet("/getrestaurants", () => new RestaurantService().GetRestaurants());
+
 app.MapPost("/orderdish", [Authorize] async 
     (HttpContext http, 
     IDishService dishService, 
     IRestaurantService restaurantService, 
-    IUserRepositoryService userRepositoryService  ) => {
-    
-        var userName = http.User.Identity.Name;
+    IUserRepositoryService userRepositoryService,
+    IOrderService orderService) => 
+{
+    var userName = http.User.Identity.Name;
 
-        //upserting users to data base
-        await userRepositoryService.UpsertUsers();
+    //upserting users to data base
+    await userRepositoryService.UpsertUsers();
 
-        var restaurantsDto = restaurantService.GetRestaurant();
-        var dishesDto = dishService.GetDishes();
+    var dishes = dishService.GetDishes();
 
-        var dishModel = new DishModel();
-        dishModel.DishId = 3;
-        var dishDto = dishService.GetDish(dishModel, dishesDto);
-        if (dishDto == null)
-        {
-            http.Response.StatusCode = 401;
-            return;
-        }
-        http.Response.WriteAsJsonAsync(dishDto);
+    var orderDto = await http.Request.ReadFromJsonAsync<OrderDto>();
+    var dishDto = dishService.GetDish(orderDto, dishes);
+    if (dishDto == null)
+    {
+        http.Response.StatusCode = 403;
         return;
-    });
+    }
+    await orderService.InsertOrder(dishDto, userName, orderDto);
+    await http.Response.WriteAsJsonAsync(dishDto);
+    return;
+});
 
+app.MapPost("/returnorder", [Authorize] async
+    (HttpContext http,
+    IOrderService orderService) =>
+{
+    var orders = orderService.GiveOrderInformations();
+    await http.Response.WriteAsJsonAsync(orders);
+});
 
-await app.RunAsync();
+    await app.RunAsync();
 
 
