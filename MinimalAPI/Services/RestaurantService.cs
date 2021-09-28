@@ -1,4 +1,5 @@
-﻿using MinimalAPI;
+﻿using Microsoft.EntityFrameworkCore;
+using MinimalAPI;
 
 public class RestaurantService : IRestaurantService
 {
@@ -13,7 +14,7 @@ public class RestaurantService : IRestaurantService
                 .Include(r => r.Dishes)
                 .ToListAsync())
                 .Select(Convert);
-            return enumerable;
+            return restaurantDtos;
         }
     }
 
@@ -37,6 +38,9 @@ public class RestaurantService : IRestaurantService
         Task<IEnumerable<RestaurantDto>> restaurantDtos,
         string searchRestaurant)
     {
-        return restaurantDtos;
+        var syncRestaurantDtos = restaurantDtos.Result.AsEnumerable();
+        syncRestaurantDtos = syncRestaurantDtos.Where(r => r.Name.Contains(searchRestaurant));
+        
+        return syncRestaurantDtos;
     }
 }

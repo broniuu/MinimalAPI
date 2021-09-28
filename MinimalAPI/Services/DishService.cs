@@ -1,4 +1,7 @@
-﻿namespace MinimalAPI;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
+
+namespace MinimalAPI;
 
 public class DishService : IDishService
 {
@@ -22,8 +25,11 @@ public class DishService : IDishService
                 .ToListAsync()).Select(Convert);
         }
     }
-
-    private DishDto Convert(Dish dish)
+    public DishDto GetDish(OrderDto orderDto, Task<IEnumerable<DishDto>> dishDtos)
+    {
+        return dishDtos.Result.ToList().FirstOrDefault(d => Equals(d.DishID, orderDto.DishId));
+    }
+    public DishDto Convert(Dish dish)
     {
         var name = dish.Restaurant;
         return new DishDto
@@ -37,34 +43,5 @@ public class DishService : IDishService
                 Name = dish.Restaurant.Name
             }
         };
-    }
-
-    public DishDto GetDish(OrderDto orderDto, Task<IEnumerable<DishDto>> dishDtos)
-    {
-        return dishDtos.Result.ToList().FirstOrDefault(d => Equals(d.DishID, orderDto.DishId));
-    }
-    public async Task<IEnumerable<DishDto>> FilterDishes(
-        Task<IEnumerable<DishDto>> dishDtos,
-        string dishNameReading,
-        string dsihIdReading,
-        string maxPriceReading,
-        string minPriceReading,
-        string restaurantNameReading,
-        string restaurantIdReading,
-        string availabilityReading)
-    {
-        var filterDishes = dishDtos.Result.ToList().AsEnumerable();
-        if (!String.IsNullOrEmpty(dishNameReading))
-        {
-            filterDishes = filterDishes.Where(fd => fd.Name.Contains(dishNameReading));
-        }
-    }
-    private IEnumerable<DishDto> UseSingielFilter(IEnumerable<DishDto> dishes, string namedishAtribute, string reading)
-    {
-        if (!String.IsNullOrEmpty(reading))
-        {
-            return dishes.Where(dishAtribute.Contains(reading));
-        }
-        return dishes;
     }
 }

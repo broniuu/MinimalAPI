@@ -7,6 +7,7 @@ builder.Services.AddSingleton<IRestaurantService>(new RestaurantService());
 builder.Services.AddSingleton<IDishService>(new DishService());
 builder.Services.AddSingleton<IOrderService>(new OrderService());
 builder.Services.AddSingleton<IPageService>(new PageService());
+builder.Services.AddSingleton<IFilterService>(new FilterService());
 builder.Services.AddAuthorization();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(opt =>
 {
@@ -74,7 +75,8 @@ app.MapPost("/orderdish", [Authorize] async
     IDishService dishService,
     IRestaurantService restaurantService,
     IUserRepositoryService userRepositoryService,
-    IOrderService orderService) =>
+    IOrderService orderService,
+    IFilterService filterService) =>
 {
     var userName = http.User.Identity.Name;
 
@@ -91,7 +93,15 @@ app.MapPost("/orderdish", [Authorize] async
         return;
     }
     await orderService.InsertOrder(dishDto, userName, orderDto);
+    var filter = filterService.SetFilterParameters(
+        "dishname",
+        "maxprice",
+        "minprice",
+        "restaurantname",
+        "availability",
+        http);
     await http.Response.WriteAsJsonAsync(dishDto);
+
     return;
 });
 

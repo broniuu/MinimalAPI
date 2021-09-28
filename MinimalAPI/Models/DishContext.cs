@@ -1,4 +1,8 @@
-﻿namespace MinimalAPI
+﻿
+
+using Microsoft.EntityFrameworkCore;
+
+namespace MinimalAPI
 {
     public class DishContext : DbContext
     {

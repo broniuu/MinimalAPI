@@ -2,11 +2,9 @@
 
 public class Filter
 {
-    public string DishNameReading { get; set; }
-    public string DsihIdReading { get; set; }
-    public string MaxPriceReading { get; set; }
-    public string MinPriceReading { get; set; }
-    public string RestaurantNameReading { get; set; }
-    public string RestaurantIdReading { get; set; }
+    public string DishName { get; set; }
+    public decimal MaxPrice { get; set; }
+    public decimal MinPrice { get; set; }
+    public string RestaurantName { get; set; }
     public string AvailabilityReading { get; set; }
 }
