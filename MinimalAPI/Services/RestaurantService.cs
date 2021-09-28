@@ -1,7 +1,5 @@
-﻿
-using Microsoft.EntityFrameworkCore;
+﻿using MinimalAPI;
 
-using MinimalAPI;
 public class RestaurantService : IRestaurantService
 {
     public async Task<IEnumerable<RestaurantDto>> GetRestaurants(PageParameters pageParameters)
@@ -9,7 +7,7 @@ public class RestaurantService : IRestaurantService
         using (var db = new DishContext())
         {
 
-            var enumerable = (await db.Restaurants
+            var restaurantDtos = (await db.Restaurants
                 .Skip((pageParameters.PageNumber - 1) * pageParameters.PageSize)
                 .Take(pageParameters.PageSize)
                 .Include(r => r.Dishes)
@@ -18,6 +16,7 @@ public class RestaurantService : IRestaurantService
             return enumerable;
         }
     }
+
     private RestaurantDto Convert(Restaurant restaurant)
     {
         var restaurantDto = new RestaurantDto
@@ -31,6 +30,13 @@ public class RestaurantService : IRestaurantService
 
     private DishForRestaurantDto ConvertDish(Dish dish)
     {
-        return new DishForRestaurantDto { Name = dish.Name} ;
+        return new DishForRestaurantDto { Name = dish.Name };
+    }
+
+    public async Task<IEnumerable<RestaurantDto>> SearchForRestaurants(
+        Task<IEnumerable<RestaurantDto>> restaurantDtos,
+        string searchRestaurant)
+    {
+        return restaurantDtos;
     }
 }
