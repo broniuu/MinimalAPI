@@ -120,7 +120,7 @@ public class FilterService : IFilterService
         //}
         //return filterDishes;
     }
-
+    // TODO: Check work of FilterDish metod 
     private bool FilterDish(Dish dish,
         string dishNameReading,
         string maxPriceReading,
